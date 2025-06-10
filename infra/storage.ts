@@ -1,1 +1,12 @@
-export const bucket = new sst.aws.Bucket("MyBucket");
+export const bucket = new sst.aws.Bucket("Uploads");
+
+
+// Create DynamoDB table
+
+export const table = new sst.aws.Dynamo("Notes", {
+    fields: {
+        userId: "string",
+        noteId: "string",
+    },
+    primaryIndex: { hashKey: "userId", rangeKey: "noteId"},
+});
