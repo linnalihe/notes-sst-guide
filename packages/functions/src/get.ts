@@ -12,7 +12,7 @@ export const main = Util.handler(async ( event ) => {
         // The 'Key" defines the partition key and sort key 
         // of item to be retrieved
         Key: {
-            userId: "123",
+            userId: event.requestContext.authorizer?.iam.cognitoIdentity.identityId,
             noteId: event?.pathParameters?.id,
         },
         
