@@ -1,4 +1,9 @@
-export const bucket = new sst.aws.Bucket("Uploads");
+export const bucket = new sst.aws.Bucket("Uploads", {
+    // cors is enabled by default
+    cors: {
+        allowMethods: ["GET"]
+    }
+});
 
 
 // Create DynamoDB table
