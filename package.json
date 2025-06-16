@@ -9,12 +9,15 @@
     "@tsconfig/node22": "^22",
     "@types/bootstrap": "^5.2.10",
     "@types/react-bootstrap": "^1.1.0",
+    "@types/react-router-bootstrap": "^0.26.8",
     "typescript": "^5"
   },
   "dependencies": {
     "bootstrap": "^5.3.6",
     "react-bootstrap": "^2.10.10",
     "react-icons": "^5.5.0",
+    "react-router-bootstrap": "^0.26.3",
+    "react-router-dom": "^6.23.0",
     "sst": "^3",
     "stripe": "^18.2.1"
   }
