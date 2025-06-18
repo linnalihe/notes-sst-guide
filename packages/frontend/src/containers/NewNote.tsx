@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 import LoaderButton from "../components/LoaderButton"
 import config from "../config";
 import "./NewNote.css"
+import { showError } from "../lib/errorLib";
+import { API } from "aws-amplify";
+import type { NoteType } from "../types/note";
+import { s3Upload } from "../lib/awsLib";
 
 export default function NewNote() {
     const file = useRef<null | File>(null)
@@ -22,6 +26,12 @@ export default function NewNote() {
         
     }
 
+    function createNote(note: NoteType) {
+        return API.post("notes-sst-guide", "/notes-sst-guide", {
+            body: note,
+        })
+    }
+
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (file.current && file.current.size > config.MAX_ATTACHMENT_SIZE) {
@@ -33,6 +43,15 @@ export default function NewNote() {
             return;
         }
         setIsLoading(true);
+
+        try {
+            const attachment = file.current ? await s3Upload(file.current) : undefined;
+            await createNote( { content, attachment });
+            nav("/");
+        } catch (e) {
+            showError(e);
+            setIsLoading(false);
+        }
     }
 
     return (
