@@ -6,6 +6,9 @@ import { useFormFields } from "../lib/hooksLib";
 import { useAppContext } from "../lib/contextLib";
 import LoaderButton from "../components/LoaderButton";
 import "./Signup.css"
+import { showError } from "../lib/errorLib";
+import { Auth } from "aws-amplify";
+import type {ISignUpResult } from "amazon-cognito-identity-js"
 
 export default function Signup() {
     const [ fields, setFields ] = useFormFields({
@@ -15,9 +18,9 @@ export default function Signup() {
         confirmationCode: "",
     });
     const nav = useNavigate();
-    // const { userIsAuthenticated } = useAppContext()
+    const { setIsAuthenticated } = useAppContext()
     const [ isLoading, setIsLoading ] = useState(false)
-    const [ newUser, setNewUser ] = useState<null | string>(null);
+    const [ newUser, setNewUser ] = useState<null | ISignUpResult>(null);
 
     function validateForm() {
         return (
@@ -33,7 +36,17 @@ export default function Signup() {
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         setIsLoading(true);
-        setNewUser("test");
+        try {
+            const newUser = await Auth.signUp({
+                username: fields.email,
+                password: fields.password,
+            });
+            setIsLoading(false);
+            setNewUser(newUser);
+        } catch (e) {
+            showError(e)
+            setIsLoading(false);
+        }
         setIsLoading(false);
     }
 
@@ -42,6 +55,15 @@ export default function Signup() {
     ) {
         event.preventDefault();
         setIsLoading(true);
+        try {
+            await Auth.confirmSignUp(fields.email, fields.confirmationCode);
+            await Auth.signIn(fields.email, fields.password);
+            setIsAuthenticated(true)
+            nav("/");
+        } catch (e) {
+            showError(e);
+            setIsLoading(false)
+        }
     }
 
     function renderConfirmationForm() {
@@ -96,12 +118,12 @@ export default function Signup() {
                         onChange={setFields} />
                     </Form.Group>
 
-                    <Form.Group controlId="password">
+                    <Form.Group controlId="confirmPassword">
                         <Form.Label>confirmPassword</Form.Label>
                         <Form.Control
                         size="lg"
                         autoFocus
-                        type="confirmPassword"
+                        type="password"
                         value={fields.confirmPassword}
                         onChange={setFields} />
                     </Form.Group>
