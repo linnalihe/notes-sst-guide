@@ -1,6 +1,8 @@
 const config = {
-    // Backend config
+    //frontend config
+    MAX_ATTACHMENT_SIZE: 5000000,
 
+    // Backend config
     s3: {
         REGION: import.meta.env.VITE_REGION,
         BUCKET: import.meta.env.VITE_BUCKET,
