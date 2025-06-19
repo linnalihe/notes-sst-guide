@@ -6,7 +6,7 @@ export const api = new sst.aws.ApiGatewayV2("Api", {
 
   //cors is enabled by default
   cors: {
-    allowMethods: ["GET"]
+    allowMethods: ["GET", "PUT"]
   },
 
   transform: {
