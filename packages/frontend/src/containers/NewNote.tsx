@@ -27,7 +27,7 @@ export default function NewNote() {
     }
 
     function createNote(note: NoteType) {
-        return API.post("notes-sst-guide", "/notes-sst-guide", {
+        return API.post("notes", "/notes", {
             body: note,
         })
     }
