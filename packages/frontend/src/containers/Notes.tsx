@@ -96,6 +96,12 @@ export default function Notes() {
         }
     }
 
+    function deleteNote() {
+        return API.del("notes-sst-guide", `/notes/${id}`, {})
+
+        // TODO LL: implement functionality to delete attachment also
+    }
+
     async function handleDelete(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
@@ -106,6 +112,14 @@ export default function Notes() {
         if (!confirmed) return;
 
         setIsDeleting(true);
+
+        try {
+            await deleteNote();
+            nav("/");
+        } catch (e) {
+            showError(e);
+            setIsDeleting(false);
+        }
     }
     return (
         <div className="Notes">

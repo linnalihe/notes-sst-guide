@@ -5,12 +5,11 @@ import LoaderButton from "../components/LoaderButton.tsx"
 import "./Login.css";
 import { Auth } from "aws-amplify";
 import { useAppContext } from "../lib/contextLib";
-import { useNavigate } from "react-router-dom"
 import { showError } from "../lib/errorLib";
 import { useFormFields } from "../lib/hooksLib";
 
 export default function Login() {
-    const nav = useNavigate();
+
     const { setIsAuthenticated } = useAppContext();
     const [ fields, setFields ] = useFormFields({
         email: "",
@@ -28,7 +27,6 @@ export default function Login() {
         try {
             await Auth.signIn(fields.email, fields.password);
             setIsAuthenticated(true)
-            nav("/")
             alert("Logged in")
         } catch (error) {
             showError(error);
